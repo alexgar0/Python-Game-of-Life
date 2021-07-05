@@ -22,6 +22,13 @@ You can change the game speed by editing the FPS value:
         FPS = 60
 ```
 
+# In-game controls:
+`spacebar` - to pause/unpause
+
+`Left mouse button` - to place a cell
+
+`Right mouse button` - to remove a cell
+
 ## TODO:
 
 - [x] Main logic
