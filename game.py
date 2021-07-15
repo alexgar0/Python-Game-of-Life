@@ -1,13 +1,14 @@
 import pygame
 import numpy as np
+from numba import njit
 
-RES = WIDTH, HEIGHT = (2000, 1000)  # main window resolution
+RES = WIDTH, HEIGHT = (1500, 1000)  # main window resolution
 FPS = 60
 pygame.init()
 pygame.font.init()
 
 BACKGROUND_COLOR = pygame.Color("black")
-TILE = 13  # pixels per one cell
+TILE = 5  # pixels per one cell
 W, H = WIDTH // TILE, HEIGHT // TILE
 FONT = pygame.font.SysFont('arial', TILE if TILE > 30 else 30)
 
@@ -17,15 +18,22 @@ current_field = np.zeros(shape=(W, H))
 # randomize array
 current_field = np.round(np.random.sample((W, H)))
 
-neighbours = lambda f, x, y: [f[x - 1][y + 1], f[x][y + 1], f[x + 1][y + 1], f[x - 1][y], f[x + 1][y],
-                              f[x - 1][y - 1], f[x][y - 1], f[x + 1][y - 1]]
+
+# neighbours = lambda f, x, y: [f[x - 1][y + 1], f[x][y + 1], f[x + 1][y + 1], f[x - 1][y], f[x + 1][y],
+#                               f[x - 1][y - 1], f[x][y - 1], f[x + 1][y - 1]]
+
+@njit
+def neighbours(f, x, y):
+    return [f[x - 1][y + 1], f[x][y + 1], f[x + 1][y + 1], f[x - 1][y], f[x + 1][y],
+            f[x - 1][y - 1], f[x][y - 1], f[x + 1][y - 1]]
 
 
+@njit
 def find_neighbours_count(field, x, y):
     """Returns the number of neighbors of a specific cell"""
     return neighbours(field, x, y).count(1)
 
-
+@njit
 def process_field(field):
     """Returns the next state of the field"""
 
